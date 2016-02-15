@@ -18,8 +18,9 @@
 #include <rte_mbuf.h>
 
 
-#define MBUF_SIZE (2048 + sizeof(struct rte_mbuf) + RTE_PKTMBUF_HEADROOM)
-#define NB_MBUF   8192
+#define MBUF_SIZE			(2048 + sizeof(struct rte_mbuf) + RTE_PKTMBUF_HEADROOM)
+#define NB_MBUF				8192
+#define MEMPOOL_CACHE_SIZE	256
 
 #define RX_PTHRESH 8
 #define RX_HTHRESH 8
@@ -71,7 +72,7 @@ static struct rte_mempool* make_mempool() {
 	static int pool_id = 0;
 	char pool_name[32];
 	sprintf(pool_name, "pool%d", __sync_fetch_and_add(&pool_id, 1));
-	return rte_mempool_create(pool_name, NB_MBUF, MBUF_SIZE, 32,
+	return rte_mempool_create(pool_name, NB_MBUF, MBUF_SIZE, MEMPOOL_CACHE_SIZE,
 		sizeof(struct rte_pktmbuf_pool_private),
 		rte_pktmbuf_pool_init, NULL,
 		rte_pktmbuf_init, NULL,
